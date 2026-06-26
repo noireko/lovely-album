@@ -7,13 +7,13 @@
   @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Cormorant+Garamond:ital@0;1&family=Quicksand:wght@400;500;600&display=swap');
 
   :root{
-    --sage: #8a9a7e;
-    --sage-dark: #5f6f52;
-    --moss: #3f4a37;
-    --bark: #6b5544;
-    --cream: #f6f1e7;
-    --paper: #fffdf8;
-    --gold: #c9a86a;
+    --sage: #a8b596;
+    --sage-dark: #6f7a5a;
+    --moss: #2e3a28;
+    --bark: #6b4f3a;
+    --cream: #f3ece0;
+    --paper: #fffaf2;
+    --gold: #c4a26f;
   }
 
   *{ box-sizing: border-box; }
@@ -34,16 +34,6 @@
     background: linear-gradient(180deg, var(--sage) 0%, var(--sage-dark) 100%);
     color: var(--cream);
     overflow: hidden;
-  }
-  header::before{
-    content:"🌿";
-    position:absolute; left: 6%; top: 18px; font-size: 28px; opacity:.6;
-    transform: rotate(-15deg);
-  }
-  header::after{
-    content:"🌿";
-    position:absolute; right: 6%; bottom: 18px; font-size: 28px; opacity:.6;
-    transform: rotate(160deg);
   }
   header h1{
     font-family: 'Caveat', cursive;
@@ -105,7 +95,7 @@
   main{
     max-width: 1100px;
     margin: 0 auto;
-    padding: 50px 24px 100px;
+    padding: 70px 24px 120px;
   }
 
   .section-title{
@@ -140,7 +130,7 @@
     background: var(--paper);
   }
   .grid:empty::after{
-    content: "🌿 todavía no hay fotos en esta sección — usá \"Subir foto\" y elegila acá";
+    content: "todavía no hay fotos en esta sección — usá \"Subir foto\" y elegila acá";
     font-family: 'Cormorant Garamond', serif;
     font-style: italic;
     color: var(--bark);
@@ -248,7 +238,7 @@
   .photo-slot{ cursor: zoom-in; position: relative; background-size: cover; background-position: center; }
   .photo-slot.empty{ cursor: pointer; }
   .photo-slot.empty::after{
-    content: "📷 tocar para subir";
+    content: "tocar para subir";
     font-size: .8rem;
   }
   .photo-slot.filled{ color: transparent; }
@@ -623,15 +613,18 @@
   .delete-photo-btn:hover{ background: #f9cfcf; }
 
   /* ── Cabecera de sección con botón eliminar ── */
+  .section{
+    margin-bottom: 90px;
+  }
+  .section:last-of-type{ margin-bottom: 0; }
   .section-header{
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    margin: 50px 0 30px;
+    margin: 0 0 36px;
     position: relative;
   }
-  .section-header:first-of-type{ margin-top: 0; }
   .section-title{
     margin: 0;
   }
@@ -676,15 +669,15 @@
 
 <div class="counter">
   <div class="count-number" id="dayCount">—</div>
-  <div class="count-label">días juntos desde el 29 de junio de 2024 🌿</div>
+  <div class="count-label">días juntos desde el 29 de junio de 2024</div>
 </div>
 
 <div class="toolbar">
-  <div class="pill" onclick="triggerFirstEmptyUpload()" style="cursor:pointer"><span class="icon">📷</span>Subir foto</div>
-  <div class="pill" onclick="openNewSectionModal()" style="cursor:pointer"><span class="icon">➕</span>Nueva sección</div>
-  <div class="pill" id="date-search-pill" onclick="openDateSearchModal()"><span class="icon">🔍</span>Buscar por fecha</div>
-  <div class="pill" id="fav-filter-pill" onclick="toggleFavoritesFilter()" style="cursor:pointer"><span class="icon">🤍</span>Favoritos</div>
-  <div class="pill" id="slideshow-pill" onclick="startSlideshow()" style="cursor:pointer"><span class="icon">🎞️</span>Modo presentación</div>
+  <div class="pill" onclick="triggerFirstEmptyUpload()" style="cursor:pointer">Subir foto</div>
+  <div class="pill" onclick="openNewSectionModal()" style="cursor:pointer">Nueva sección</div>
+  <div class="pill" id="date-search-pill" onclick="openDateSearchModal()">Buscar por fecha</div>
+  <div class="pill" id="fav-filter-pill" onclick="toggleFavoritesFilter()" style="cursor:pointer">Favoritos</div>
+  <div class="pill" id="slideshow-pill" onclick="startSlideshow()" style="cursor:pointer">Modo presentación</div>
 </div>
 
 <main>
@@ -703,8 +696,8 @@
         <div class="field"><b>Ubicación:</b> </div>
         <div class="card-note" id="note-display-1"></div>
         <div class="card-actions">
-          <div class="mini-btn note-btn" id="note-btn-1" onclick="openNoteModal(1)">💬 Añadir nota</div>
-          <div class="mini-btn fav-btn" id="fav-1" onclick="toggleFavorite(1)">🤍</div>
+          <div class="mini-btn note-btn" id="note-btn-1" onclick="openNoteModal(1)">Añadir nota</div>
+          <div class="mini-btn fav-btn" id="fav-1" onclick="toggleFavorite(1)">♡</div>
           <div class="delete-photo-btn" onclick="deleteCard(this)">✕</div>
         </div>
       </div>
@@ -716,8 +709,8 @@
         <div class="field"><b>Ubicación:</b> </div>
         <div class="card-note" id="note-display-2"></div>
         <div class="card-actions">
-          <div class="mini-btn note-btn" id="note-btn-2" onclick="openNoteModal(2)">💬 Añadir nota</div>
-          <div class="mini-btn fav-btn" id="fav-2" onclick="toggleFavorite(2)">🤍</div>
+          <div class="mini-btn note-btn" id="note-btn-2" onclick="openNoteModal(2)">Añadir nota</div>
+          <div class="mini-btn fav-btn" id="fav-2" onclick="toggleFavorite(2)">♡</div>
           <div class="delete-photo-btn" onclick="deleteCard(this)">✕</div>
         </div>
       </div>
@@ -729,8 +722,8 @@
         <div class="field"><b>Ubicación:</b> </div>
         <div class="card-note" id="note-display-3"></div>
         <div class="card-actions">
-          <div class="mini-btn note-btn" id="note-btn-3" onclick="openNoteModal(3)">💬 Añadir nota</div>
-          <div class="mini-btn fav-btn" id="fav-3" onclick="toggleFavorite(3)">🤍</div>
+          <div class="mini-btn note-btn" id="note-btn-3" onclick="openNoteModal(3)">Añadir nota</div>
+          <div class="mini-btn fav-btn" id="fav-3" onclick="toggleFavorite(3)">♡</div>
           <div class="delete-photo-btn" onclick="deleteCard(this)">✕</div>
         </div>
       </div>
@@ -752,8 +745,8 @@
         <div class="field"><b>Ubicación:</b> </div>
         <div class="card-note" id="note-display-4"></div>
         <div class="card-actions">
-          <div class="mini-btn note-btn" id="note-btn-4" onclick="openNoteModal(4)">💬 Añadir nota</div>
-          <div class="mini-btn fav-btn" id="fav-4" onclick="toggleFavorite(4)">🤍</div>
+          <div class="mini-btn note-btn" id="note-btn-4" onclick="openNoteModal(4)">Añadir nota</div>
+          <div class="mini-btn fav-btn" id="fav-4" onclick="toggleFavorite(4)">♡</div>
           <div class="delete-photo-btn" onclick="deleteCard(this)">✕</div>
         </div>
       </div>
@@ -765,8 +758,8 @@
         <div class="field"><b>Ubicación:</b> </div>
         <div class="card-note" id="note-display-5"></div>
         <div class="card-actions">
-          <div class="mini-btn note-btn" id="note-btn-5" onclick="openNoteModal(5)">💬 Añadir nota</div>
-          <div class="mini-btn fav-btn" id="fav-5" onclick="toggleFavorite(5)">🤍</div>
+          <div class="mini-btn note-btn" id="note-btn-5" onclick="openNoteModal(5)">Añadir nota</div>
+          <div class="mini-btn fav-btn" id="fav-5" onclick="toggleFavorite(5)">♡</div>
           <div class="delete-photo-btn" onclick="deleteCard(this)">✕</div>
         </div>
       </div>
@@ -778,8 +771,8 @@
         <div class="field"><b>Ubicación:</b> </div>
         <div class="card-note" id="note-display-6"></div>
         <div class="card-actions">
-          <div class="mini-btn note-btn" id="note-btn-6" onclick="openNoteModal(6)">💬 Añadir nota</div>
-          <div class="mini-btn fav-btn" id="fav-6" onclick="toggleFavorite(6)">🤍</div>
+          <div class="mini-btn note-btn" id="note-btn-6" onclick="openNoteModal(6)">Añadir nota</div>
+          <div class="mini-btn fav-btn" id="fav-6" onclick="toggleFavorite(6)">♡</div>
           <div class="delete-photo-btn" onclick="deleteCard(this)">✕</div>
         </div>
       </div>
@@ -787,61 +780,30 @@
   </div>
   </div>
 
-  <div class="feature-strip">
-    <h3>Ideas para más adelante</h3>
-    <div class="feature-list">
-      <div class="feature-item">
-        <div class="feat-title">📍 Mapa de lugares</div>
-        <div class="feat-desc">Un mapa con un marcador en cada sitio donde tomamos una foto.</div>
-      </div>
-      <div class="feature-item">
-        <div class="feat-title">🕰️ Línea del tiempo</div>
-        <div class="feat-desc">Recorrer las fotos en orden cronológico, como un carrete que se va desenrollando.</div>
-      </div>
-      <div class="feature-item">
-        <div class="feat-title">💬 Notas y mensajitos</div>
-        <div class="feat-desc">Espacio debajo de cada foto para escribirnos algo sobre ese momento.</div>
-      </div>
-      <div class="feature-item">
-        <div class="feat-title">🤍 Favoritos</div>
-        <div class="feat-desc">Marcar las fotos que más nos gustan para encontrarlas rápido.</div>
-      </div>
-      <div class="feature-item">
-        <div class="feat-title">🎞️ Modo presentación</div>
-        <div class="feat-desc">Que las fotos pasen solas, como una pequeña película de nosotros.</div>
-      </div>
-      <div class="feature-item">
-        <div class="feat-title">📅 Contador de días</div>
-        <div class="feat-desc">Cuánto tiempo llevamos juntos, sumando desde el primer día.</div>
-      </div>
-    </div>
-  </div>
 
 </main>
-
-<footer>hecho con cariño, hoja por hoja 🍂</footer>
 
 <!-- Modal: subir foto -->
 <div class="modal-overlay" id="upload-modal">
   <div class="modal-box">
     <button class="modal-close" onclick="closeUploadModal()">✕</button>
-    <h2>📷 Subir foto</h2>
+    <h2>Subir foto</h2>
     <p class="modal-sub">contanos un poco sobre este momento</p>
     <div class="modal-field">
-      <label>🗂️ Sección</label>
+      <label>Sección</label>
       <select id="modal-section"></select>
     </div>
     <div class="modal-field">
-      <label>📅 Día</label>
+      <label>Día</label>
       <input type="date" id="modal-date" />
     </div>
     <div class="modal-field">
-      <label>📍 Ubicación</label>
+      <label>Ubicación</label>
       <input type="text" id="modal-location" placeholder="ej: Parque Lezama, Buenos Aires" />
     </div>
     <div class="modal-actions">
       <button class="modal-btn secondary" onclick="closeUploadModal()">Cancelar</button>
-      <button class="modal-btn primary" onclick="confirmUpload()">Elegir foto 🌿</button>
+      <button class="modal-btn primary" onclick="confirmUpload()">Elegir foto</button>
     </div>
   </div>
 </div>
@@ -850,7 +812,7 @@
 <div class="modal-overlay" id="new-section-modal">
   <div class="modal-box">
     <button class="modal-close" onclick="closeNewSectionModal()">✕</button>
-    <h2>➕ Nueva sección</h2>
+    <h2>Nueva sección</h2>
     <p class="modal-sub">ej: "Verano 2027", "Viaje a Bariloche"...</p>
     <div class="modal-field">
       <label>Nombre de la sección</label>
@@ -858,7 +820,7 @@
     </div>
     <div class="modal-actions">
       <button class="modal-btn secondary" onclick="closeNewSectionModal()">Cancelar</button>
-      <button class="modal-btn primary" onclick="confirmNewSection()">Crear 🌿</button>
+      <button class="modal-btn primary" onclick="confirmNewSection()">Crear</button>
     </div>
   </div>
 </div>
@@ -868,16 +830,16 @@
 <div class="modal-overlay" id="note-modal">
   <div class="modal-box">
     <button class="modal-close" onclick="closeNoteModal()">✕</button>
-    <h2>💬 Tu nota</h2>
+    <h2>Tu nota</h2>
     <p class="modal-sub">escribí algo sobre este momento</p>
     <div class="modal-field">
       <label>Nota</label>
       <textarea id="modal-note-text" placeholder="ej: ese día fue mágico, llovía un poco y nos refugiamos en la cafetería..."></textarea>
     </div>
     <div class="modal-actions">
-      <button class="modal-btn secondary" id="note-delete-btn" onclick="deleteNote()" style="display:none">🗑 Borrar</button>
+      <button class="modal-btn secondary" id="note-delete-btn" onclick="deleteNote()" style="display:none">Borrar</button>
       <button class="modal-btn secondary" onclick="closeNoteModal()">Cancelar</button>
-      <button class="modal-btn primary" onclick="saveNote()">Guardar 🌿</button>
+      <button class="modal-btn primary" onclick="saveNote()">Guardar</button>
     </div>
   </div>
 </div>
@@ -904,15 +866,15 @@
 <div class="modal-overlay" id="date-search-modal">
   <div class="modal-box">
     <button class="modal-close" onclick="closeDateSearchModal()">✕</button>
-    <h2>🔍 Buscar por fecha</h2>
+    <h2>Buscar por fecha</h2>
     <p class="modal-sub">elegí un día para encontrar esa foto</p>
     <div class="modal-field">
-      <label>📅 Fecha</label>
+      <label>Fecha</label>
       <input type="date" id="search-date-input" />
     </div>
     <div class="modal-actions">
       <button class="modal-btn secondary" onclick="clearDateSearch()">Limpiar filtro</button>
-      <button class="modal-btn primary" onclick="applyDateSearch()">Buscar 🌿</button>
+      <button class="modal-btn primary" onclick="applyDateSearch()">Buscar</button>
     </div>
   </div>
 </div>
@@ -982,12 +944,12 @@
     if(text){
       display.textContent = text;
       display.classList.add('visible');
-      btn.textContent = '✏️ Editar nota';
+      btn.textContent = 'Editar nota';
       btn.classList.add('has-note');
     } else {
       display.textContent = '';
       display.classList.remove('visible');
-      btn.textContent = '💬 Añadir nota';
+      btn.textContent = 'Añadir nota';
       btn.classList.remove('has-note');
     }
     closeNoteModal();
@@ -1116,8 +1078,8 @@
         '<div class="field"><b>Ubicación:</b> </div>' +
         '<div class="card-note" id="note-display-' + n + '"></div>' +
         '<div class="card-actions">' +
-          '<div class="mini-btn note-btn" id="note-btn-' + n + '" onclick="openNoteModal(' + n + ')">💬 Añadir nota</div>' +
-          '<div class="mini-btn fav-btn" id="fav-' + n + '" onclick="toggleFavorite(' + n + ')">🤍</div>' +
+          '<div class="mini-btn note-btn" id="note-btn-' + n + '" onclick="openNoteModal(' + n + ')">Añadir nota</div>' +
+          '<div class="mini-btn fav-btn" id="fav-' + n + '" onclick="toggleFavorite(' + n + ')">♡</div>' +
           '<div class="delete-photo-btn" onclick="deleteCard(this)">✕</div>' +
         '</div>' +
       '</div>';
@@ -1140,7 +1102,7 @@
   function confirmNewSection(){
     var name = document.getElementById('new-section-name').value.trim();
     if(!name){
-      alert('Ponele un nombre a la sección 🌿');
+      alert('Ponele un nombre a la sección');
       return;
     }
     var id = 'section-' + (sectionCounter++) + '-' + Date.now();
@@ -1168,7 +1130,7 @@
   function toggleFavorite(n){
     var btn = document.getElementById('fav-' + n);
     btn.classList.toggle('active');
-    btn.textContent = btn.classList.contains('active') ? '❤️' : '🤍';
+    btn.textContent = btn.classList.contains('active') ? '♥' : '♡';
     var card = btn.closest('.card');
     card.dataset.fav = btn.classList.contains('active') ? 'true' : 'false';
     if(favoritesOnly) applyFavoritesFilter();
@@ -1297,7 +1259,7 @@
       if(!msg){
         msg = document.createElement('div');
         msg.className = 'no-results-msg';
-        msg.textContent = 'No hay fotos para esa fecha en esta sección 🍂';
+        msg.textContent = 'No hay fotos para esa fecha en esta sección';
         grid.appendChild(msg);
       }
       msg.classList.toggle('visible', !anyVisible);
@@ -1338,7 +1300,7 @@
   function startSlideshow(){
     buildSlides();
     if(ssSlides.length === 0){
-      alert('¡Todavía no hay fotos para presentar! Subí alguna primero 🌿');
+      alert('¡Todavía no hay fotos para presentar! Subí alguna primero');
       return;
     }
     ssIndex = 0;
@@ -1383,7 +1345,7 @@
         photo.textContent = 'sin foto';
       }
       document.getElementById('s-date').textContent = slide.date || '';
-      var loc = slide.location && slide.location !== '—' ? '📍 ' + slide.location : '';
+      var loc = slide.location && slide.location !== '—' ? slide.location : '';
       document.getElementById('s-location').textContent = loc;
       document.getElementById('s-note').textContent = slide.note || '';
       document.getElementById('s-counter').textContent = (idx + 1) + ' / ' + ssSlides.length;
@@ -1550,14 +1512,14 @@
             var noteBtn = card.querySelector('.note-btn');
             noteDisplay.textContent = cardData.note;
             noteDisplay.classList.add('visible');
-            if(noteBtn){ noteBtn.textContent = '✏️ Editar nota'; noteBtn.classList.add('has-note'); }
+            if(noteBtn){ noteBtn.textContent = 'Editar nota'; noteBtn.classList.add('has-note'); }
           }
 
           // Restaurar favorito
           if(cardData.fav){
             card.dataset.fav = 'true';
             var favBtn = card.querySelector('.fav-btn');
-            if(favBtn){ favBtn.classList.add('active'); favBtn.textContent = '❤️'; }
+            if(favBtn){ favBtn.classList.add('active'); favBtn.textContent = '♥'; }
           }
 
           grid.appendChild(card);
@@ -1617,3 +1579,4 @@
 
 </body>
 </html>
+
