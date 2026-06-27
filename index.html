@@ -788,7 +788,7 @@
   <div class="modal-box">
     <button class="modal-close" onclick="closeUploadModal()">✕</button>
     <h2>Subir foto</h2>
-    <p class="modal-sub">contanos un poco sobre este momento</p>
+    <p class="modal-sub">describir momento</p>
     <div class="modal-field">
       <label>Sección</label>
       <select id="modal-section"></select>
@@ -799,7 +799,7 @@
     </div>
     <div class="modal-field">
       <label>Ubicación</label>
-      <input type="text" id="modal-location" placeholder="ej: Parque Lezama, Buenos Aires" />
+      <input type="text" id="modal-location" placeholder="ej: Casa de Thali, Capital, etc" />
     </div>
     <div class="modal-actions">
       <button class="modal-btn secondary" onclick="closeUploadModal()">Cancelar</button>
@@ -813,10 +813,10 @@
   <div class="modal-box">
     <button class="modal-close" onclick="closeNewSectionModal()">✕</button>
     <h2>Nueva sección</h2>
-    <p class="modal-sub">ej: "Verano 2027", "Viaje a Bariloche"...</p>
+    <p class="modal-sub">ej: "Verano 2027", "Viaje a Mar del Sur"...</p>
     <div class="modal-field">
       <label>Nombre de la sección</label>
-      <input type="text" id="new-section-name" placeholder="ej: Verano 2027" />
+      <input type="text" id="new-section-name" placeholder="ej: Verano 2027, Invierno 2026" />
     </div>
     <div class="modal-actions">
       <button class="modal-btn secondary" onclick="closeNewSectionModal()">Cancelar</button>
@@ -834,7 +834,7 @@
     <p class="modal-sub">escribí algo sobre este momento</p>
     <div class="modal-field">
       <label>Nota</label>
-      <textarea id="modal-note-text" placeholder="ej: ese día fue mágico, llovía un poco y nos refugiamos en la cafetería..."></textarea>
+      <textarea id="modal-note-text" placeholder="ej: describir foto o día"></textarea>
     </div>
     <div class="modal-actions">
       <button class="modal-btn secondary" id="note-delete-btn" onclick="deleteNote()" style="display:none">Borrar</button>
@@ -867,7 +867,7 @@
   <div class="modal-box">
     <button class="modal-close" onclick="closeDateSearchModal()">✕</button>
     <h2>Buscar por fecha</h2>
-    <p class="modal-sub">elegí un día para encontrar esa foto</p>
+    <p class="modal-sub">elegir un día para encontrar esa foto</p>
     <div class="modal-field">
       <label>Fecha</label>
       <input type="date" id="search-date-input" />
