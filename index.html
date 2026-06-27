@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Nuestro álbum de fotos</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Cormorant+Garamond:ital@0;1&family=Quicksand:wght@400;500;600&display=swap');
+
+  :root{
+    --sage: #a8b596;
+    --sage-dark: #6f7a5a;
+    --moss: #2e3a28;
+    --bark: #6b4f3a;
+    --cream: #f3ece0;
+    --paper: #fffaf2;
+    --gold: #c4a26f;
+  }
+
+  *{ box-sizing: border-box; }
+  body{
+    margin:0;
+    background: var(--cream);
+    background-image:
+      radial-gradient(circle at 10% 20%, rgba(138,154,126,0.12), transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(201,168,106,0.10), transparent 45%);
+    color: var(--moss);
+    font-family: 'Quicksand', sans-serif;
+  }
+
+  header{
+    position: relative;
+    padding: 70px 20px 60px;
+    text-align: center;
+    background: linear-gradient(180deg, var(--sage) 0%, var(--sage-dark) 100%);
+    color: var(--cream);
+    overflow: hidden;
+  }
+  header h1{
+    font-family: 'Caveat', cursive;
+    font-size: 4.2rem;
+    margin: 0;
+    line-height: 1.05;
+    letter-spacing: 1px;
+  }
+  header p{
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+    margin-top: 10px;
+    opacity: .9;
+  }
+
+  .counter{
+    text-align: center;
+    padding: 22px 20px 0;
+    background: var(--paper);
+  }
+  .counter .count-number{
+    font-family: 'Caveat', cursive;
+    font-size: 3rem;
+    color: var(--sage-dark);
+    line-height: 1;
+  }
+  .counter .count-label{
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--bark);
+    font-size: 1rem;
+    margin-top: 2px;
+  }
+
+  .toolbar{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+    padding: 28px 20px;
+    background: var(--paper);
+    border-bottom: 1px dashed var(--sage);
+  }
+  .pill{
+    font-family: 'Quicksand', sans-serif;
+    font-size: .85rem;
+    font-weight: 600;
+    color: var(--sage-dark);
+    background: #eef1e7;
+    border: 1px solid var(--sage);
+    border-radius: 999px;
+    padding: 8px 18px;
+    cursor: default;
+    user-select: none;
+  }
+  .pill span.icon{ margin-right: 6px; }
+
+  main{
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 70px 24px 120px;
+  }
+
+  .section-title{
+    font-family: 'Caveat', cursive;
+    font-size: 2.1rem;
+    color: var(--bark);
+    text-align: center;
+    margin: 50px 0 30px;
+    position: relative;
+  }
+  .section-title:first-of-type{ margin-top: 0; }
+  .section-title::after{
+    content:"";
+    display:block;
+    width: 80px; height: 2px;
+    background: var(--gold);
+    margin: 8px auto 0;
+    border-radius: 2px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px 32px;
+  }
+  .grid:empty{
+    display: block;
+    text-align: center;
+    padding: 30px 20px;
+    border: 1px dashed var(--sage);
+    border-radius: 14px;
+    background: var(--paper);
+  }
+  .grid:empty::after{
+    content: "todavía no hay fotos en esta sección — usá \"Subir foto\" y elegila acá";
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--bark);
+    font-size: .95rem;
+  }
+
+  .card{
+    background: var(--paper);
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(63,74,55,0.08);
+    overflow: hidden;
+    border: 1px solid #e7e0cf;
+    transition: transform .2s ease;
+  }
+  .photo-slot{
+    aspect-ratio: 4/5;
+    background:
+      repeating-linear-gradient(135deg, #e3ddca 0, #e3ddca 12px, #dcd5bf 12px, #dcd5bf 24px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color: #a99a7c;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: .95rem;
+  }
+  .card-body{
+    padding: 14px 16px 18px;
+  }
+  .card-body .field{
+    font-size: .85rem;
+    margin: 4px 0;
+    color: var(--bark);
+  }
+  .card-body .field b{
+    color: var(--sage-dark);
+    font-weight: 600;
+  }
+  .card-actions{
+    display:flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .mini-btn{
+    font-size: .72rem;
+    font-weight: 600;
+    color: var(--sage-dark);
+    background: #eef1e7;
+    border: 1px solid #d7dcc8;
+    border-radius: 8px;
+    padding: 5px 10px;
+    cursor: default;
+  }
+
+  .fav-btn{ cursor: pointer; transition: transform .15s ease; }
+  .fav-btn:active{ transform: scale(0.85); }
+  .fav-btn.active{ background: #fde8e8; border-color: #e8b4b4; }
+
+  .pill.active-filter{
+    background: var(--sage-dark);
+    color: var(--cream);
+  }
+
+  .card.hidden-by-filter{ display: none; }
+
+  .feature-strip{
+    margin-top: 70px;
+    background: #eef1e7;
+    border: 1px dashed var(--sage);
+    border-radius: 18px;
+    padding: 36px 30px;
+    text-align: center;
+  }
+  .feature-strip h3{
+    font-family: 'Caveat', cursive;
+    font-size: 1.8rem;
+    color: var(--bark);
+    margin-top: 0;
+  }
+  .feature-list{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 20px;
+    text-align: left;
+  }
+  .feature-item{
+    background: var(--paper);
+    border-radius: 12px;
+    padding: 14px 16px;
+    border: 1px solid #e7e0cf;
+  }
+  .feature-item .feat-title{
+    font-weight: 600;
+    color: var(--sage-dark);
+    font-size: .92rem;
+    margin-bottom: 4px;
+  }
+  .feature-item .feat-desc{
+    font-size: .8rem;
+    color: var(--bark);
+    line-height: 1.4;
+  }
+
+  .photo-slot{ cursor: zoom-in; position: relative; background-size: cover; background-position: center; }
+  .photo-slot.empty{ cursor: pointer; }
+  .photo-slot.empty::after{
+    content: "tocar para subir";
+    font-size: .8rem;
+  }
+  .photo-slot.filled{ color: transparent; }
+
+  .lightbox{
+    position: fixed;
+    inset: 0;
+    background: rgba(63,74,55,0.82);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    padding: 30px;
+  }
+  .lightbox.active{ display: flex; }
+  .lightbox-content{
+    background: var(--paper);
+    border-radius: 14px;
+    padding: 10px;
+    max-width: 90vw;
+    max-height: 90vh;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  }
+  .lightbox-photo{
+    width: min(70vw, 480px);
+    height: min(70vh, 600px);
+    background:
+      repeating-linear-gradient(135deg, #e3ddca 0, #e3ddca 12px, #dcd5bf 12px, #dcd5bf 24px);
+    border-radius: 10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color: #a99a7c;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    cursor: zoom-out;
+  }
+
+  footer{
+    text-align:center;
+    padding: 30px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--bark);
+    font-size: .95rem;
+  }
+
+  /* ── Modal subir foto ── */
+  .modal-overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(63,74,55,0.75);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+  .modal-overlay.active{ display: flex; }
+  .modal-box{
+    background: var(--paper);
+    border-radius: 18px;
+    padding: 34px 32px 28px;
+    width: min(420px, 92vw);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    border: 1px solid #e7e0cf;
+    position: relative;
+  }
+  .modal-box h2{
+    font-family: 'Caveat', cursive;
+    font-size: 2rem;
+    color: var(--bark);
+    margin: 0 0 6px;
+    text-align: center;
+  }
+  .modal-box .modal-sub{
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--sage-dark);
+    font-size: .95rem;
+    text-align: center;
+    margin-bottom: 26px;
+  }
+  .modal-field{
+    margin-bottom: 18px;
+  }
+  .modal-field label{
+    display: block;
+    font-weight: 600;
+    font-size: .85rem;
+    color: var(--sage-dark);
+    margin-bottom: 6px;
+  }
+  .modal-field input{
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #d7dcc8;
+    border-radius: 10px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: .9rem;
+    color: var(--moss);
+    background: #f9f7f1;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .modal-field input:focus{
+    border-color: var(--sage);
+    background: #fff;
+  }
+  .modal-field select{
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #d7dcc8;
+    border-radius: 10px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: .9rem;
+    color: var(--moss);
+    background: #f9f7f1;
+    outline: none;
+    transition: border-color .2s;
+    cursor: pointer;
+  }
+  .modal-field select:focus{
+    border-color: var(--sage);
+    background: #fff;
+  }
+  .modal-actions{
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+  }
+  .modal-btn{
+    flex: 1;
+    padding: 11px;
+    border-radius: 10px;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: .9rem;
+    cursor: pointer;
+    border: none;
+    transition: opacity .15s;
+  }
+  .modal-btn:active{ opacity: .8; }
+  .modal-btn.primary{
+    background: var(--sage-dark);
+    color: var(--cream);
+  }
+  .modal-btn.secondary{
+    background: #eef1e7;
+    color: var(--sage-dark);
+    border: 1px solid #d7dcc8;
+  }
+  .modal-close{
+    position: absolute;
+    top: 14px; right: 16px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: .5;
+    background: none;
+    border: none;
+    color: var(--moss);
+    line-height: 1;
+  }
+  .modal-close:hover{ opacity: 1; }
+
+  /* ── Modal de nota ── */
+  #note-modal .modal-field textarea{
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #d7dcc8;
+    border-radius: 10px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: .9rem;
+    color: var(--moss);
+    background: #f9f7f1;
+    outline: none;
+    resize: vertical;
+    min-height: 110px;
+    transition: border-color .2s;
+    line-height: 1.5;
+  }
+  #note-modal .modal-field textarea:focus{
+    border-color: var(--sage);
+    background: #fff;
+  }
+
+  /* ── Nota en la card ── */
+  .card-note{
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: #f0f3e8;
+    border-left: 3px solid var(--sage);
+    border-radius: 0 8px 8px 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: .9rem;
+    color: var(--bark);
+    line-height: 1.45;
+    display: none;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .card-note.visible{ display: block; }
+
+  /* Botón de nota con texto cuando ya hay nota */
+  .note-btn.has-note{
+    background: #f0f3e8;
+    border-color: var(--sage);
+    color: var(--moss);
+  }
+
+  /* ── Búsqueda por fecha ── */
+  #date-search-pill{ cursor: pointer; }
+  #date-search-pill.active-filter{
+    background: var(--sage-dark);
+    color: var(--cream);
+  }
+  .no-results-msg{
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--bark);
+    font-size: 1.1rem;
+    grid-column: 1 / -1;
+  }
+  .no-results-msg.visible{ display: block; }
+
+  /* ── Modo presentación ── */
+  .slideshow-overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 24, 18, 0.97);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+    padding: 20px;
+  }
+  .slideshow-overlay.active{ display: flex; }
+  .slideshow-photo{
+    width: min(72vw, 500px);
+    height: min(72vh, 640px);
+    border-radius: 16px;
+    background: #2a2f24 repeating-linear-gradient(135deg, #262b20 0, #262b20 12px, #2e3328 12px, #2e3328 24px);
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #a99a7c;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    transition: opacity .45s ease;
+    flex-shrink: 0;
+  }
+  .slideshow-photo.fade{ opacity: 0; }
+  .slideshow-info{
+    margin-top: 22px;
+    text-align: center;
+  }
+  .slideshow-info .s-date{
+    font-family: 'Caveat', cursive;
+    font-size: 1.6rem;
+    color: var(--cream);
+    line-height: 1.1;
+  }
+  .slideshow-info .s-location{
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--sage);
+    font-size: 1rem;
+    margin-top: 4px;
+  }
+  .slideshow-info .s-note{
+    margin-top: 10px;
+    max-width: 460px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: #c8c0ae;
+    font-size: .95rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+  }
+  .slideshow-controls{
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 26px;
+  }
+  .s-btn{
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--cream);
+    border-radius: 50%;
+    width: 48px; height: 48px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s;
+    flex-shrink: 0;
+  }
+  .s-btn:hover{ background: rgba(255,255,255,0.16); }
+  .s-btn.play-btn{
+    width: 58px; height: 58px;
+    font-size: 1.5rem;
+    background: var(--sage-dark);
+    border-color: var(--sage);
+  }
+  .s-btn.play-btn:hover{ background: var(--sage); }
+  .s-close-btn{
+    position: absolute;
+    top: 18px; right: 22px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    font-size: 1.6rem;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .s-close-btn:hover{ color: var(--cream); }
+  .slideshow-dots{
+    display: flex;
+    gap: 7px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 300px;
+  }
+  .s-dot{
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    transition: background .2s, transform .2s;
+    cursor: pointer;
+  }
+  .s-dot.active{
+    background: var(--sage);
+    transform: scale(1.3);
+  }
+  .slideshow-counter{
+    font-family: 'Quicksand', sans-serif;
+    font-size: .8rem;
+    color: rgba(255,255,255,0.35);
+    margin-top: 10px;
+    letter-spacing: .5px;
+  }
+
+  /* ── Botón eliminar foto ── */
+  .delete-photo-btn{
+    font-size: .8rem;
+    font-weight: 700;
+    color: #b94a4a;
+    background: #fde8e8;
+    border: 1px solid #e8b4b4;
+    border-radius: 6px;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background .15s;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+  .delete-photo-btn:hover{ background: #f9cfcf; }
+
+  /* ── Cabecera de sección con botón eliminar ── */
+  .section{
+    margin-bottom: 90px;
+  }
+  .section:last-of-type{ margin-bottom: 0; }
+  .section-header{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 0 0 36px;
+    position: relative;
+  }
+  .section-title{
+    margin: 0;
+  }
+  .section-title::after{
+    margin-top: 8px;
+  }
+  .delete-section-btn{
+    font-size: .8rem;
+    font-weight: 700;
+    color: #b94a4a;
+    background: #fde8e8;
+    border: 1px solid #e8b4b4;
+    border-radius: 6px;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    line-height: 1;
+    transition: background .15s;
+  }
+  .delete-section-btn:hover{ background: #f9cfcf; }
+
+  @media (max-width: 800px){
+    .grid{ grid-template-columns: repeat(2, 1fr); }
+    .feature-list{ grid-template-columns: 1fr; }
+  }
+  @media (max-width: 520px){
+    .grid{ grid-template-columns: 1fr; }
+    header h1{ font-size: 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Nuestro álbum de fotos</h1>
+  <p>para mi amorcito</p>
+</header>
+
+<div class="counter">
+  <div class="count-number" id="dayCount">—</div>
+  <div class="count-label">días juntos desde el 29 de junio de 2024</div>
+</div>
+
+<div class="toolbar">
+  <div class="pill" onclick="triggerFirstEmptyUpload()" style="cursor:pointer">Subir foto</div>
+  <div class="pill" onclick="openNewSectionModal()" style="cursor:pointer">Nueva sección</div>
+  <div class="pill" id="date-search-pill" onclick="openDateSearchModal()">Buscar por fecha</div>
+  <div class="pill" id="fav-filter-pill" onclick="toggleFavoritesFilter()" style="cursor:pointer">Favoritos</div>
+  <div class="pill" id="slideshow-pill" onclick="startSlideshow()" style="cursor:pointer">Modo presentación</div>
+</div>
+
+<main>
+
+
+  <div class="section" data-section-id="otono" data-section-name="Otoño juntos">
+  <div class="section-header">
+    <div class="section-title">Otoño juntos</div>
+    <button class="delete-section-btn" onclick="deleteSection(this)">✕</button>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <div class="photo-slot empty" id="slot-1" onclick="handleSlotClick(1)"><input type="file" id="input-1" accept="image/*" style="display:none" onchange="handleFileSelect(1, this)"></div>
+      <div class="card-body">
+        <div class="field"><b>Día:</b> </div>
+        <div class="field"><b>Ubicación:</b> </div>
+        <div class="card-note" id="note-display-1"></div>
+        <div class="card-actions">
+          <div class="mini-btn note-btn" id="note-btn-1" onclick="openNoteModal(1)">Añadir nota</div>
+          <div class="mini-btn fav-btn" id="fav-1" onclick="toggleFavorite(1)">♡</div>
+          <div class="delete-photo-btn" onclick="deleteCard(this)">✕</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="photo-slot empty" id="slot-2" onclick="handleSlotClick(2)"><input type="file" id="input-2" accept="image/*" style="display:none" onchange="handleFileSelect(2, this)"></div>
+      <div class="card-body">
+        <div class="field"><b>Día:</b> </div>
+        <div class="field"><b>Ubicación:</b> </div>
+        <div class="card-note" id="note-display-2"></div>
+        <div class="card-actions">
+          <div class="mini-btn note-btn" id="note-btn-2" onclick="openNoteModal(2)">Añadir nota</div>
+          <div class="mini-btn fav-btn" id="fav-2" onclick="toggleFavorite(2)">♡</div>
+          <div class="delete-photo-btn" onclick="deleteCard(this)">✕</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="photo-slot empty" id="slot-3" onclick="handleSlotClick(3)"><input type="file" id="input-3" accept="image/*" style="display:none" onchange="handleFileSelect(3, this)"></div>
+      <div class="card-body">
+        <div class="field"><b>Día:</b> </div>
+        <div class="field"><b>Ubicación:</b> </div>
+        <div class="card-note" id="note-display-3"></div>
+        <div class="card-actions">
+          <div class="mini-btn note-btn" id="note-btn-3" onclick="openNoteModal(3)">Añadir nota</div>
+          <div class="mini-btn fav-btn" id="fav-3" onclick="toggleFavorite(3)">♡</div>
+          <div class="delete-photo-btn" onclick="deleteCard(this)">✕</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+  <div class="section" data-section-id="invierno" data-section-name="Aventuras de invierno">
+  <div class="section-header">
+    <div class="section-title">Aventuras de invierno</div>
+    <button class="delete-section-btn" onclick="deleteSection(this)">✕</button>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <div class="photo-slot empty" id="slot-4" onclick="handleSlotClick(4)"><input type="file" id="input-4" accept="image/*" style="display:none" onchange="handleFileSelect(4, this)"></div>
+      <div class="card-body">
+        <div class="field"><b>Día:</b> </div>
+        <div class="field"><b>Ubicación:</b> </div>
+        <div class="card-note" id="note-display-4"></div>
+        <div class="card-actions">
+          <div class="mini-btn note-btn" id="note-btn-4" onclick="openNoteModal(4)">Añadir nota</div>
+          <div class="mini-btn fav-btn" id="fav-4" onclick="toggleFavorite(4)">♡</div>
+          <div class="delete-photo-btn" onclick="deleteCard(this)">✕</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="photo-slot empty" id="slot-5" onclick="handleSlotClick(5)"><input type="file" id="input-5" accept="image/*" style="display:none" onchange="handleFileSelect(5, this)"></div>
+      <div class="card-body">
+        <div class="field"><b>Día:</b> </div>
+        <div class="field"><b>Ubicación:</b> </div>
+        <div class="card-note" id="note-display-5"></div>
+        <div class="card-actions">
+          <div class="mini-btn note-btn" id="note-btn-5" onclick="openNoteModal(5)">Añadir nota</div>
+          <div class="mini-btn fav-btn" id="fav-5" onclick="toggleFavorite(5)">♡</div>
+          <div class="delete-photo-btn" onclick="deleteCard(this)">✕</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="photo-slot empty" id="slot-6" onclick="handleSlotClick(6)"><input type="file" id="input-6" accept="image/*" style="display:none" onchange="handleFileSelect(6, this)"></div>
+      <div class="card-body">
+        <div class="field"><b>Día:</b> </div>
+        <div class="field"><b>Ubicación:</b> </div>
+        <div class="card-note" id="note-display-6"></div>
+        <div class="card-actions">
+          <div class="mini-btn note-btn" id="note-btn-6" onclick="openNoteModal(6)">Añadir nota</div>
+          <div class="mini-btn fav-btn" id="fav-6" onclick="toggleFavorite(6)">♡</div>
+          <div class="delete-photo-btn" onclick="deleteCard(this)">✕</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+</main>
+
+<!-- Modal: subir foto -->
+<div class="modal-overlay" id="upload-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeUploadModal()">✕</button>
+    <h2>Subir foto</h2>
+    <p class="modal-sub">contanos un poco sobre este momento</p>
+    <div class="modal-field">
+      <label>Sección</label>
+      <select id="modal-section"></select>
+    </div>
+    <div class="modal-field">
+      <label>Día</label>
+      <input type="date" id="modal-date" />
+    </div>
+    <div class="modal-field">
+      <label>Ubicación</label>
+      <input type="text" id="modal-location" placeholder="ej: Parque Lezama, Buenos Aires" />
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn secondary" onclick="closeUploadModal()">Cancelar</button>
+      <button class="modal-btn primary" onclick="confirmUpload()">Elegir foto</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: nueva sección -->
+<div class="modal-overlay" id="new-section-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeNewSectionModal()">✕</button>
+    <h2>Nueva sección</h2>
+    <p class="modal-sub">ej: "Verano 2027", "Viaje a Bariloche"...</p>
+    <div class="modal-field">
+      <label>Nombre de la sección</label>
+      <input type="text" id="new-section-name" placeholder="ej: Verano 2027" />
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn secondary" onclick="closeNewSectionModal()">Cancelar</button>
+      <button class="modal-btn primary" onclick="confirmNewSection()">Crear</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal: nota -->
+<div class="modal-overlay" id="note-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeNoteModal()">✕</button>
+    <h2>Tu nota</h2>
+    <p class="modal-sub">escribí algo sobre este momento</p>
+    <div class="modal-field">
+      <label>Nota</label>
+      <textarea id="modal-note-text" placeholder="ej: ese día fue mágico, llovía un poco y nos refugiamos en la cafetería..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn secondary" id="note-delete-btn" onclick="deleteNote()" style="display:none">Borrar</button>
+      <button class="modal-btn secondary" onclick="closeNoteModal()">Cancelar</button>
+      <button class="modal-btn primary" onclick="saveNote()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modo presentación -->
+<div class="slideshow-overlay" id="slideshow-overlay">
+  <button class="s-close-btn" onclick="closeSlideshow()">✕</button>
+  <div class="slideshow-photo" id="s-photo"></div>
+  <div class="slideshow-info">
+    <div class="s-date" id="s-date"></div>
+    <div class="s-location" id="s-location"></div>
+    <div class="s-note" id="s-note"></div>
+  </div>
+  <div class="slideshow-controls">
+    <button class="s-btn" onclick="slideshowPrev()">‹</button>
+    <button class="s-btn play-btn" id="s-play-btn" onclick="toggleSlideshowPlay()">⏸</button>
+    <button class="s-btn" onclick="slideshowNext()">›</button>
+  </div>
+  <div class="slideshow-dots" id="s-dots"></div>
+  <div class="slideshow-counter" id="s-counter"></div>
+</div>
+
+<!-- Modal: buscar por fecha -->
+<div class="modal-overlay" id="date-search-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeDateSearchModal()">✕</button>
+    <h2>Buscar por fecha</h2>
+    <p class="modal-sub">elegí un día para encontrar esa foto</p>
+    <div class="modal-field">
+      <label>Fecha</label>
+      <input type="date" id="search-date-input" />
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn secondary" onclick="clearDateSearch()">Limpiar filtro</button>
+      <button class="modal-btn primary" onclick="applyDateSearch()">Buscar</button>
+    </div>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <div class="lightbox-content" onclick="event.stopPropagation()">
+    <div class="lightbox-photo" id="lightbox-photo" onclick="closeLightbox()">foto</div>
+  </div>
+</div>
+
+<script>
+  function openLightbox(src){
+    var photo = document.getElementById('lightbox-photo');
+    if(src){
+      photo.style.backgroundImage = "url('" + src + "')";
+      photo.textContent = "";
+    } else {
+      photo.style.backgroundImage = "none";
+      photo.textContent = "foto";
+    }
+    document.getElementById('lightbox').classList.add('active');
+  }
+  function closeLightbox(){
+    document.getElementById('lightbox').classList.remove('active');
+  }
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape'){
+      closeLightbox();
+      closeUploadModal();
+      closeNoteModal();
+      closeDateSearchModal();
+      closeNewSectionModal();
+      closeSlideshow();
+    }
+    if(document.getElementById('slideshow-overlay').classList.contains('active')){
+      if(e.key === 'ArrowRight') slideshowNext();
+      if(e.key === 'ArrowLeft') slideshowPrev();
+      if(e.key === ' '){ e.preventDefault(); toggleSlideshowPlay(); }
+    }
+  });
+
+  /* ── Modal de nota ── */
+  var noteSlot = null;
+
+  function openNoteModal(n){
+    noteSlot = n;
+    var existing = document.getElementById('note-display-' + n).textContent;
+    var textarea = document.getElementById('modal-note-text');
+    textarea.value = existing || '';
+    // Mostrar botón borrar solo si ya hay nota
+    var delBtn = document.getElementById('note-delete-btn');
+    delBtn.style.display = existing ? 'block' : 'none';
+    document.getElementById('note-modal').classList.add('active');
+    setTimeout(function(){ textarea.focus(); }, 100);
+  }
+
+  function closeNoteModal(){
+    document.getElementById('note-modal').classList.remove('active');
+    noteSlot = null;
+  }
+
+  function saveNote(){
+    if(noteSlot === null) return;
+    var text = document.getElementById('modal-note-text').value.trim();
+    var display = document.getElementById('note-display-' + noteSlot);
+    var btn = document.getElementById('note-btn-' + noteSlot);
+    if(text){
+      display.textContent = text;
+      display.classList.add('visible');
+      btn.textContent = 'Editar nota';
+      btn.classList.add('has-note');
+    } else {
+      display.textContent = '';
+      display.classList.remove('visible');
+      btn.textContent = 'Añadir nota';
+      btn.classList.remove('has-note');
+    }
+    closeNoteModal();
+  }
+
+  function deleteNote(){
+    if(noteSlot === null) return;
+    document.getElementById('modal-note-text').value = '';
+    saveNote();
+  }
+
+  var favoritesOnly = false;
+  var pendingSlot = null;       // guarda qué slot existente está esperando (flujo viejo: slot vacío ya en el DOM)
+  var pendingIsNew = false;     // true cuando la card todavía no existe y hay que crearla al confirmar
+
+  /* ── Contador global para ids únicos de cards nuevas ── */
+  var nextSlotId = 1000; // arranca alto para no chocar con los slots 1-6 ya existentes
+
+  /* ── Llena el <select> del modal con todas las secciones existentes ── */
+  function populateSectionSelect(preferredSectionId){
+    var select = document.getElementById('modal-section');
+    select.innerHTML = '';
+    document.querySelectorAll('.section').forEach(function(sectionEl){
+      var opt = document.createElement('option');
+      opt.value = sectionEl.dataset.sectionId;
+      opt.textContent = sectionEl.dataset.sectionName;
+      select.appendChild(opt);
+    });
+    if(preferredSectionId) select.value = preferredSectionId;
+  }
+
+  /* ── Botón "Subir foto" de la toolbar: pide datos y sección, la card se crea al confirmar ── */
+  function triggerFirstEmptyUpload(){
+    pendingSlot = null;
+    pendingIsNew = true;
+    document.getElementById('modal-date').value = '';
+    document.getElementById('modal-location').value = '';
+    populateSectionSelect();
+    document.getElementById('modal-section').closest('.modal-field').style.display = '';
+    document.getElementById('upload-modal').classList.add('active');
+    setTimeout(function(){ document.getElementById('modal-date').focus(); }, 100);
+  }
+
+  /* ── Click sobre un slot vacío ya existente en el álbum (flujo original) ── */
+  function openUploadModal(n){
+    pendingSlot = n;
+    pendingIsNew = false;
+    document.getElementById('modal-date').value = '';
+    document.getElementById('modal-location').value = '';
+    // Este slot ya pertenece a una sección fija: no mostramos el selector
+    document.getElementById('modal-section').closest('.modal-field').style.display = 'none';
+    document.getElementById('upload-modal').classList.add('active');
+    setTimeout(function(){ document.getElementById('modal-date').focus(); }, 100);
+  }
+
+  function closeUploadModal(){
+    document.getElementById('upload-modal').classList.remove('active');
+    pendingSlot = null;
+    pendingIsNew = false;
+  }
+
+  function confirmUpload(){
+    if(pendingSlot === null && !pendingIsNew) return;
+    var dateVal     = document.getElementById('modal-date').value;
+    var locationVal = document.getElementById('modal-location').value;
+
+    var n;
+    if(pendingIsNew){
+      // Crear la card nueva ahora, en la sección elegida
+      var sectionId = document.getElementById('modal-section').value;
+      var sectionEl = document.querySelector('.section[data-section-id="' + sectionId + '"]');
+      if(!sectionEl){
+        var sections = document.querySelectorAll('.section');
+        sectionEl = sections[sections.length - 1];
+      }
+      var targetGrid = sectionEl.querySelector('.grid');
+      n = nextSlotId++;
+      var card = buildEmptyCard(n);
+      targetGrid.appendChild(card);
+    } else {
+      n = pendingSlot;
+    }
+
+    var slot = document.getElementById('slot-' + n);
+    slot.dataset.pendingDate     = dateVal;
+    slot.dataset.pendingLocation = locationVal;
+
+    document.getElementById('upload-modal').classList.remove('active');
+    pendingSlot = null;
+    pendingIsNew = false;
+
+    var fileInput = document.getElementById('input-' + n);
+    if(fileInput){
+      // Si el usuario cancela el selector de archivos, no hay 'change'.
+      // Usamos 'cancel' (soportado en navegadores modernos) para limpiar la card vacía.
+      fileInput.addEventListener('cancel', function onCancel(){
+        fileInput.removeEventListener('cancel', onCancel);
+        removeIfEmpty(n);
+      });
+      fileInput.click();
+    }
+  }
+
+  /* ── Elimina del DOM una card que quedó sin foto (tras cancelar el selector de archivos) ── */
+  function removeIfEmpty(n){
+    var slot = document.getElementById('slot-' + n);
+    if(!slot) return;
+    if(!slot.classList.contains('empty')) return; // ya tiene foto, no tocar
+    // Solo borramos cards creadas dinámicamente (id numérico >= 1000); los slots originales 1-6 se dejan vacíos
+    if(n >= 1000){
+      var card = slot.closest('.card');
+      if(card) card.remove();
+    }
+  }
+
+  /* ── Construye el HTML de una card vacía y devuelve el elemento ── */
+  function buildEmptyCard(n){
+    var card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML =
+      '<div class="photo-slot empty" id="slot-' + n + '" onclick="handleSlotClick(' + n + ')">' +
+        '<input type="file" id="input-' + n + '" accept="image/*" style="display:none" onchange="handleFileSelect(' + n + ', this)">' +
+      '</div>' +
+      '<div class="card-body">' +
+        '<div class="field"><b>Día:</b> </div>' +
+        '<div class="field"><b>Ubicación:</b> </div>' +
+        '<div class="card-note" id="note-display-' + n + '"></div>' +
+        '<div class="card-actions">' +
+          '<div class="mini-btn note-btn" id="note-btn-' + n + '" onclick="openNoteModal(' + n + ')">Añadir nota</div>' +
+          '<div class="mini-btn fav-btn" id="fav-' + n + '" onclick="toggleFavorite(' + n + ')">♡</div>' +
+          '<div class="delete-photo-btn" onclick="deleteCard(this)">✕</div>' +
+        '</div>' +
+      '</div>';
+    return card;
+  }
+
+  /* ── Nueva sección ── */
+  var sectionCounter = 1;
+
+  function openNewSectionModal(){
+    document.getElementById('new-section-name').value = '';
+    document.getElementById('new-section-modal').classList.add('active');
+    setTimeout(function(){ document.getElementById('new-section-name').focus(); }, 100);
+  }
+
+  function closeNewSectionModal(){
+    document.getElementById('new-section-modal').classList.remove('active');
+  }
+
+  function confirmNewSection(){
+    var name = document.getElementById('new-section-name').value.trim();
+    if(!name){
+      alert('Ponele un nombre a la sección');
+      return;
+    }
+    var id = 'section-' + (sectionCounter++) + '-' + Date.now();
+    var section = document.createElement('div');
+    section.className = 'section';
+    section.dataset.sectionId = id;
+    section.dataset.sectionName = name;
+    section.innerHTML =
+      '<div class="section-header">' +
+        '<div class="section-title">' + escapeHtml(name) + '</div>' +
+        '<button class="delete-section-btn" onclick="deleteSection(this)">✕</button>' +
+      '</div>' +
+      '<div class="grid"></div>';
+    document.querySelector('main').appendChild(section);
+    closeNewSectionModal();
+  }
+
+  function escapeHtml(str){
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  /* ── Favoritos ── */
+  function toggleFavorite(n){
+    var btn = document.getElementById('fav-' + n);
+    btn.classList.toggle('active');
+    btn.textContent = btn.classList.contains('active') ? '♥' : '♡';
+    var card = btn.closest('.card');
+    card.dataset.fav = btn.classList.contains('active') ? 'true' : 'false';
+    if(favoritesOnly) applyFavoritesFilter();
+  }
+
+  function toggleFavoritesFilter(){
+    favoritesOnly = !favoritesOnly;
+    var pill = document.getElementById('fav-filter-pill');
+    pill.classList.toggle('active-filter', favoritesOnly);
+    applyFavoritesFilter();
+  }
+
+  function applyFavoritesFilter(){
+    document.querySelectorAll('.card').forEach(function(card){
+      var isFav = card.dataset.fav === 'true';
+      var hiddenByDate = card.classList.contains('hidden-by-date');
+      card.classList.toggle('hidden-by-filter', favoritesOnly && !isFav);
+    });
+  }
+
+  /* ── Click sobre un slot ── */
+  function handleSlotClick(n){
+    var slot = document.getElementById('slot-' + n);
+    if(slot.classList.contains('filled')){
+      openLightbox(slot.dataset.src);
+    } else {
+      openUploadModal(n);
+    }
+  }
+
+  /* ── Formatear fecha bonita ── */
+  function formatDate(val){
+    if(!val) return '';
+    var parts = val.split('-'); // yyyy-mm-dd
+    if(parts.length !== 3) return val;
+    var months = ['enero','febrero','marzo','abril','mayo','junio',
+                  'julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    return parseInt(parts[2]) + ' de ' + months[parseInt(parts[1])-1] + ' de ' + parts[0];
+  }
+
+  /* ── Cuando se elige el archivo ── */
+  function handleFileSelect(n, input){
+    var file = input.files && input.files[0];
+    if(!file) return;
+    var slot = document.getElementById('slot-' + n);
+    var dateVal     = slot.dataset.pendingDate     || '';
+    var locationVal = slot.dataset.pendingLocation || '';
+
+    var reader = new FileReader();
+    reader.onload = function(e){
+      slot.style.backgroundImage = "url('" + e.target.result + "')";
+      slot.dataset.src = e.target.result;
+      slot.classList.remove('empty');
+      slot.classList.add('filled');
+
+      // Actualizar los campos de la card
+      var card = slot.closest('.card');
+      var fields = card.querySelectorAll('.field');
+      fields[0].innerHTML = '<b>Día:</b> ' + (formatDate(dateVal) || '—');
+      fields[1].innerHTML = '<b>Ubicación:</b> ' + (locationVal || '—');
+      card.dataset.date = dateVal; // guardamos la fecha raw para el filtro
+    };
+    reader.readAsDataURL(file);
+  }
+
+  /* ── Búsqueda por fecha ── */
+  var activeDateFilter = null;
+
+  function openDateSearchModal(){
+    document.getElementById('search-date-input').value = activeDateFilter || '';
+    document.getElementById('date-search-modal').classList.add('active');
+    setTimeout(function(){ document.getElementById('search-date-input').focus(); }, 100);
+  }
+
+  function closeDateSearchModal(){
+    document.getElementById('date-search-modal').classList.remove('active');
+  }
+
+  function applyDateSearch(){
+    var val = document.getElementById('search-date-input').value;
+    if(!val){ clearDateSearch(); return; }
+    activeDateFilter = val;
+    closeDateSearchModal();
+    applyDateFilter();
+  }
+
+  function clearDateSearch(){
+    activeDateFilter = null;
+    document.getElementById('search-date-input').value = '';
+    document.getElementById('date-search-pill').classList.remove('active-filter');
+    document.querySelectorAll('.card').forEach(function(card){
+      card.classList.remove('hidden-by-date');
+    });
+    document.querySelectorAll('.no-results-msg').forEach(function(el){ el.classList.remove('visible'); });
+    closeDateSearchModal();
+  }
+
+  function applyDateFilter(){
+    var pill = document.getElementById('date-search-pill');
+    if(!activeDateFilter){ pill.classList.remove('active-filter'); return; }
+    pill.classList.add('active-filter');
+
+    var formattedSearch = formatDate(activeDateFilter).toLowerCase();
+    var grids = document.querySelectorAll('.grid');
+
+    grids.forEach(function(grid){
+      var cards = grid.querySelectorAll('.card');
+      var anyVisible = false;
+      cards.forEach(function(card){
+        var dayField = card.querySelector('.field b');
+        // Buscar el campo Día
+        var fields = card.querySelectorAll('.field');
+        var dayText = '';
+        fields.forEach(function(f){
+          if(f.querySelector('b') && f.querySelector('b').textContent.trim() === 'Día:'){
+            dayText = f.textContent.replace('Día:', '').trim().toLowerCase();
+          }
+        });
+      var match = card.dataset.date && card.dataset.date === activeDateFilter;
+        card.classList.toggle('hidden-by-date', !match);
+        if(match) anyVisible = true;
+      });
+
+      // Mensaje si no hay resultados en esta sección
+      var msg = grid.querySelector('.no-results-msg');
+      if(!msg){
+        msg = document.createElement('div');
+        msg.className = 'no-results-msg';
+        msg.textContent = 'No hay fotos para esa fecha en esta sección';
+        grid.appendChild(msg);
+      }
+      msg.classList.toggle('visible', !anyVisible);
+    });
+  }
+
+  /* ── Modo presentación ── */
+  var ssSlides = [];
+  var ssIndex = 0;
+  var ssPlaying = true;
+  var ssTimer = null;
+  var SS_INTERVAL = 4000;
+
+  function buildSlides(){
+    ssSlides = [];
+    document.querySelectorAll('.card').forEach(function(card){
+      var slot = card.querySelector('.photo-slot');
+      if(!slot || !slot.classList.contains('filled')) return;
+      var fields = card.querySelectorAll('.field');
+      var dateText = '', locationText = '';
+      fields.forEach(function(f){
+        var b = f.querySelector('b');
+        if(!b) return;
+        if(b.textContent.trim() === 'Día:') dateText = f.textContent.replace('Día:','').trim();
+        if(b.textContent.trim() === 'Ubicación:') locationText = f.textContent.replace('Ubicación:','').trim();
+      });
+      var noteEl = card.querySelector('.card-note');
+      var note = noteEl ? noteEl.textContent.trim() : '';
+      ssSlides.push({
+        src: slot.dataset.src,
+        date: dateText,
+        location: locationText,
+        note: note
+      });
+    });
+  }
+
+  function startSlideshow(){
+    buildSlides();
+    if(ssSlides.length === 0){
+      alert('¡Todavía no hay fotos para presentar! Subí alguna primero');
+      return;
+    }
+    ssIndex = 0;
+    ssPlaying = true;
+    document.getElementById('slideshow-overlay').classList.add('active');
+    buildDots();
+    showSlide(ssIndex, false);
+    scheduleTick();
+  }
+
+  function closeSlideshow(){
+    document.getElementById('slideshow-overlay').classList.remove('active');
+    clearTimeout(ssTimer);
+  }
+
+  function buildDots(){
+    var container = document.getElementById('s-dots');
+    container.innerHTML = '';
+    ssSlides.forEach(function(_, i){
+      var d = document.createElement('div');
+      d.className = 's-dot' + (i === 0 ? ' active' : '');
+      d.onclick = (function(idx){ return function(){ goToSlide(idx); }; })(i);
+      container.appendChild(d);
+    });
+  }
+
+  function updateDots(){
+    var dots = document.querySelectorAll('.s-dot');
+    dots.forEach(function(d, i){ d.classList.toggle('active', i === ssIndex); });
+  }
+
+  function showSlide(idx, animate){
+    var photo = document.getElementById('s-photo');
+    var slide = ssSlides[idx];
+
+    function applySlide(){
+      if(slide.src){
+        photo.style.backgroundImage = "url('" + slide.src + "')";
+        photo.textContent = '';
+      } else {
+        photo.style.backgroundImage = 'none';
+        photo.textContent = 'sin foto';
+      }
+      document.getElementById('s-date').textContent = slide.date || '';
+      var loc = slide.location && slide.location !== '—' ? slide.location : '';
+      document.getElementById('s-location').textContent = loc;
+      document.getElementById('s-note').textContent = slide.note || '';
+      document.getElementById('s-counter').textContent = (idx + 1) + ' / ' + ssSlides.length;
+      updateDots();
+      if(animate) photo.classList.remove('fade');
+    }
+
+    if(animate){
+      photo.classList.add('fade');
+      setTimeout(applySlide, 450);
+    } else {
+      applySlide();
+    }
+  }
+
+  function goToSlide(idx){
+    ssIndex = (idx + ssSlides.length) % ssSlides.length;
+    showSlide(ssIndex, true);
+    if(ssPlaying){ clearTimeout(ssTimer); scheduleTick(); }
+  }
+
+  function slideshowNext(){ goToSlide(ssIndex + 1); }
+  function slideshowPrev(){ goToSlide(ssIndex - 1); }
+
+  function toggleSlideshowPlay(){
+    ssPlaying = !ssPlaying;
+    document.getElementById('s-play-btn').textContent = ssPlaying ? '⏸' : '▶';
+    if(ssPlaying) scheduleTick();
+    else clearTimeout(ssTimer);
+  }
+
+  function scheduleTick(){
+    clearTimeout(ssTimer);
+    ssTimer = setTimeout(function(){
+      ssIndex = (ssIndex + 1) % ssSlides.length;
+      showSlide(ssIndex, true);
+      scheduleTick();
+    }, SS_INTERVAL);
+  }
+
+  /* ── Eliminar foto (card) ── */
+  function deleteCard(btn){
+    if(!confirm('¿Querés eliminar esta foto del álbum?')) return;
+    var card = btn.closest('.card');
+    if(card){ card.remove(); saveToStorage(); updatePhotoCount(); }
+  }
+
+  /* ── Eliminar sección ── */
+  function deleteSection(btn){
+    var section = btn.closest('.section');
+    var name = section ? section.dataset.sectionName : 'esta sección';
+    if(!confirm('¿Querés eliminar la sección "' + name + '" y todas sus fotos?')) return;
+    if(section){ section.remove(); saveToStorage(); updatePhotoCount(); }
+  }
+
+  /* ── Contador de fotos ── */
+  function updatePhotoCount(){
+    var total = document.querySelectorAll('.photo-slot.filled').length;
+    // Si en el futuro querés mostrar el contador en algún lado, actualizalo acá
+  }
+
+  /* ════════════════════════════════════════
+     LOCAL STORAGE — guardar y restaurar
+  ════════════════════════════════════════ */
+  var LS_KEY = 'album_fotos_v1';
+
+  function saveToStorage(){
+    try {
+      var data = { sections: [], nextSlotId: nextSlotId };
+      document.querySelectorAll('.section').forEach(function(sectionEl){
+        var sectionData = {
+          id:   sectionEl.dataset.sectionId,
+          name: sectionEl.dataset.sectionName,
+          cards: []
+        };
+        sectionEl.querySelectorAll('.card').forEach(function(card){
+          var slot = card.querySelector('.photo-slot');
+          var slotId = slot ? slot.id.replace('slot-', '') : null;
+          var fields = card.querySelectorAll('.field');
+          var dateRaw = card.dataset.date || '';
+          var dateText = '';
+          var locationText = '';
+          fields.forEach(function(f){
+            var b = f.querySelector('b');
+            if(!b) return;
+            if(b.textContent.trim() === 'Día:') dateText = f.textContent.replace('Día:','').trim();
+            if(b.textContent.trim() === 'Ubicación:') locationText = f.textContent.replace('Ubicación:','').trim();
+          });
+          var noteEl = card.querySelector('.card-note');
+          var note = noteEl ? noteEl.textContent.trim() : '';
+          var fav = card.dataset.fav === 'true';
+          var filled = slot && slot.classList.contains('filled');
+          var src = filled ? (slot.dataset.src || '') : '';
+          sectionData.cards.push({
+            slotId: slotId,
+            src: src,
+            filled: filled,
+            dateRaw: dateRaw,
+            dateText: dateText,
+            locationText: locationText,
+            note: note,
+            fav: fav
+          });
+        });
+        data.sections.push(sectionData);
+      });
+      localStorage.setItem(LS_KEY, JSON.stringify(data));
+    } catch(e){
+      console.warn('No se pudo guardar en localStorage:', e);
+    }
+  }
+
+  function loadFromStorage(){
+    try {
+      var raw = localStorage.getItem(LS_KEY);
+      if(!raw) return;
+      var data = JSON.parse(raw);
+      if(!data || !data.sections) return;
+
+      // Borrar secciones actuales del DOM
+      document.querySelectorAll('.section').forEach(function(s){ s.remove(); });
+
+      if(data.nextSlotId) nextSlotId = data.nextSlotId;
+
+      var main = document.querySelector('main');
+      var featureStrip = document.querySelector('.feature-strip');
+
+      data.sections.forEach(function(sectionData){
+        var sectionEl = document.createElement('div');
+        sectionEl.className = 'section';
+        sectionEl.dataset.sectionId   = sectionData.id;
+        sectionEl.dataset.sectionName = sectionData.name;
+        sectionEl.innerHTML =
+          '<div class="section-header">' +
+            '<div class="section-title">' + escapeHtml(sectionData.name) + '</div>' +
+            '<button class="delete-section-btn" onclick="deleteSection(this)">✕</button>' +
+          '</div>' +
+          '<div class="grid"></div>';
+
+        var grid = sectionEl.querySelector('.grid');
+
+        sectionData.cards.forEach(function(cardData){
+          var n = cardData.slotId;
+          var card = buildEmptyCard(n);
+          var slot = card.querySelector('.photo-slot');
+
+          // Restaurar imagen
+          if(cardData.filled && cardData.src){
+            slot.style.backgroundImage = "url('" + cardData.src + "')";
+            slot.dataset.src = cardData.src;
+            slot.classList.remove('empty');
+            slot.classList.add('filled');
+          }
+
+          // Restaurar fecha y ubicación
+          var fields = card.querySelectorAll('.field');
+          fields[0].innerHTML = '<b>Día:</b> ' + (cardData.dateText || '—');
+          fields[1].innerHTML = '<b>Ubicación:</b> ' + (cardData.locationText || '—');
+          if(cardData.dateRaw) card.dataset.date = cardData.dateRaw;
+
+          // Restaurar nota
+          if(cardData.note){
+            var noteDisplay = card.querySelector('.card-note');
+            var noteBtn = card.querySelector('.note-btn');
+            noteDisplay.textContent = cardData.note;
+            noteDisplay.classList.add('visible');
+            if(noteBtn){ noteBtn.textContent = 'Editar nota'; noteBtn.classList.add('has-note'); }
+          }
+
+          // Restaurar favorito
+          if(cardData.fav){
+            card.dataset.fav = 'true';
+            var favBtn = card.querySelector('.fav-btn');
+            if(favBtn){ favBtn.classList.add('active'); favBtn.textContent = '♥'; }
+          }
+
+          grid.appendChild(card);
+        });
+
+        main.insertBefore(sectionEl, featureStrip);
+      });
+    } catch(e){
+      console.warn('No se pudo cargar desde localStorage:', e);
+    }
+  }
+
+  /* Guardar automáticamente tras cada acción relevante */
+  var _origHandleFileSelect = handleFileSelect;
+  handleFileSelect = function(n, input){
+    _origHandleFileSelect(n, input);
+    // Guardamos después de que el FileReader termine (usamos un pequeño delay)
+    setTimeout(saveToStorage, 200);
+  };
+
+  var _origSaveNote = saveNote;
+  saveNote = function(){
+    _origSaveNote();
+    saveToStorage();
+  };
+
+  var _origToggleFavorite = toggleFavorite;
+  toggleFavorite = function(n){
+    _origToggleFavorite(n);
+    saveToStorage();
+  };
+
+  var _origConfirmNewSection = confirmNewSection;
+  confirmNewSection = function(){
+    _origConfirmNewSection();
+    saveToStorage();
+  };
+
+  var _origConfirmUpload = confirmUpload;
+  confirmUpload = function(){
+    _origConfirmUpload();
+    // La foto se carga de forma asíncrona, guardamos después
+    setTimeout(saveToStorage, 300);
+  };
+
+  /* Cargar al iniciar */
+  loadFromStorage();
+
+  function updateDayCount(){
+    var start = new Date(2024, 5, 29); // 29 junio 2024
+    var now = new Date();
+    var diff = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+    document.getElementById('dayCount').textContent = diff;
+  }
+  updateDayCount();
+</script>
+
+</body>
+</html>
+
